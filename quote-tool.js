@@ -23,38 +23,17 @@ function addScope() {
 document.getElementById('addScopeButton').addEventListener('click', addScope);
 
 function calculateTotal() {
-    const principalEngineerRate = parseFloat(document.getElementById('principalEngineerRate').value);
-    const engineeringRate = parseFloat(document.getElementById('engineeringRate').value);
-    const draftingRate = parseFloat(document.getElementById('draftingRate').value);
-    const siteVisitFee = parseFloat(document.getElementById('siteVisitFee').value);
-    const travelFee = parseFloat(document.getElementById('travelFee').value);
+    const principalEngineerRate = parseFloat(document.getElementById('principalEngineerRate').value) || 0;
+    const engineeringRate = parseFloat(document.getElementById('engineeringRate').value) || 0;
+    const draftingRate = parseFloat(document.getElementById('draftingRate').value) || 0;
+    const siteVisitFee = parseFloat(document.getElementById('siteVisitFee').value) || 0;
+    const travelFee = parseFloat(document.getElementById('travelFee').value) || 0;
     let totalBeforeDiscount = travelFee;
 
     for (let i = 1; i <= scopeCount; i++) {
-        const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value);
-        const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value);
-        const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value);
-        const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value);
-        totalBeforeDiscount += (hoursPrincipal * principalEngineerRate) + 
-                               (hoursEngineering * engineeringRate) + 
-                               (hoursDrafting * draftingRate) + 
-                               (siteVisits * siteVisitFee);
-    }
-
-    const clientDiscount = parseFloat(document.getElementById('clientDiscount').value) / 100;
-    const totalAfterDiscount = totalBeforeDiscount * (1 - clientDiscount);
-
-    document.getElementById('totalEstimate').innerText = `$${totalAfterDiscount.toFixed(2)}`;
-}
-
-function generatePDF() {
-    const quoteForm = document.getElementById('quoteForm');
-    const pdfContent = quoteForm.innerHTML;  // Simplified version; you might want to customize this
-    const newWindow = window.open();
-    newWindow.document.write('<html><head><title>Quote PDF</title></head><body>');
-    newWindow.document.write(pdfContent);
-    newWindow.document.write('</body></html>');
-    newWindow.document.close();
-    newWindow.print();
-}
-
+        const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value) || 0;
+        const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value) || 0;
+        const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value) || 0;
+        const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
+        
+       
