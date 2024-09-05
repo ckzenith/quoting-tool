@@ -70,4 +70,24 @@ function calculateTotal() {
         const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
         
         totalBeforeDiscount += (hoursPrincipal * principalEngineerRate) + 
-                               (
+                               (hoursEngineering * engineeringRate) + 
+                               (hoursDrafting * draftingRate) + 
+                               (siteVisits * siteVisitFee);
+    }
+
+    const clientDiscount = parseFloat(document.getElementById('clientDiscount').value) / 100 || 0;
+    const totalAfterDiscount = totalBeforeDiscount * (1 - clientDiscount);
+
+    document.getElementById('totalEstimate').innerText = `$${totalAfterDiscount.toFixed(2)}`;
+}
+
+function generatePDF() {
+    const quoteForm = document.getElementById('quoteForm');
+    const pdfContent = quoteForm.innerHTML;  // Simplified version; you might want to customize this
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>Quote PDF</title></head><body>');
+    newWindow.document.write(pdfContent);
+    newWindow.document.write('</body></html>');
+    newWindow.document.close();
+    newWindow.print();
+}
