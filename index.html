@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quoting Tool V2</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAECWgUgZ0oKgr2OJoiJ03nWi0678EduCo&libraries=places"></script> <!-- Add Google Maps API key here -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAECWgUgZ0oKgr2OJoiJ03nWi0678EduCo&libraries=places"></script>
+    <script>
+        function initAutocomplete() {
+            const input = document.getElementById('projectLocation');
+            const autocomplete = new google.maps.places.Autocomplete(input);
+        }
+
+        // Ensure the initAutocomplete function is called when the page loads
+        document.addEventListener('DOMContentLoaded', initAutocomplete);
+    </script>
 </head>
 <body>
     <div class="container">
@@ -45,41 +54,8 @@
 
                 <label for="hoursDrafting1">Hours of Drafting:</label>
                 <input type="number" id="hoursDrafting1" name="hoursDrafting1" min="0" value="0" required>
-
-                <label for="siteVisits1">Site Visits Needed:</label>
-                <input type="number" id="siteVisits1" name="siteVisits1" min="0" value="0" required>
             </div>
-
-            <!-- Add & Remove Scope Buttons -->
-            <button type="button" id="addScopeButton">Add Another Scope of Work</button>
-            <button type="button" id="removeScopeButton">Remove Last Scope of Work</button>
-
-            <!-- Fee Rates -->
-            <h2>Rates & Fees</h2>
-            <label for="principalEngineerRate">Principal Engineer Rate ($/hour):</label>
-            <input type="number" id="principalEngineerRate" name="principalEngineerRate" min="0" value="150" required>
-            <label for="engineeringRate">Engineer Rate ($/hour):</label>
-            <input type="number" id="engineeringRate" name="engineeringRate" min="0" value="100" required>
-            <label for="draftingRate">Drafter Rate ($/hour):</label>
-            <input type="number" id="draftingRate" name="draftingRate" min="0" value="80" required>
-            <label for="siteVisitFee">Site Visit Fee ($):</label>
-            <input type="number" id="siteVisitFee" name="siteVisitFee" min="0" value="200" required>
-            <label for="travelFee">Travel Fee ($):</label>
-            <input type="number" id="travelFee" name="travelFee" min="0" value="100" required>
-            <label for="clientDiscount">Client Discount (%):</label>
-            <input type="number" id="clientDiscount" name="clientDiscount" min="0" value="0">
-
-            <button type="button" onclick="calculateTotal()">Calculate Total Estimate</button>
         </form>
-
-        <!-- Total Estimate Display -->
-        <h2>Total Estimate</h2>
-        <div id="totalEstimate">$0.00</div>
-
-        <!-- Generate PDF Button -->
-        <button type="button" onclick="generatePDF()">Generate PDF</button>
     </div>
-
-    <script src="quote-tool.js"></script>
 </body>
 </html>
