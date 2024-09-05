@@ -58,3 +58,52 @@ function checkOtherScope(scopeNum) {
     const otherScopeInput = document.getElementById(`otherScopeWork${scopeNum}`);
     if (dropdown.value === 'other') {
         otherScopeInput.style.display = 'block';
+    } else {
+        otherScopeInput.style.display = 'none';
+    }
+}
+
+function calculateTotal() {
+    const principalEngineerRate = parseFloat(document.getElementById('principalEngineerRate').value) || 0;
+    const engineeringRate = parseFloat(document.getElementById('engineeringRate').value) || 0;
+    const draftingRate = parseFloat(document.getElementById('draftingRate').value) || 0;
+    const siteVisitFee = parseFloat(document.getElementById('siteVisitFee').value) || 0;
+    const travelFee = parseFloat(document.getElementById('travelFee').value) || 0;
+    let totalBeforeDiscount = travelFee;
+
+    for (let i = 1; i <= scopeCount; i++) {
+        const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value) || 0;
+        const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value) || 0;
+        const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value) || 0;
+        const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
+
+        totalBeforeDiscount += (hoursPrincipal * principalEngineerRate) + 
+                               (hoursEngineering * engineeringRate) + 
+                               (hoursDrafting * draftingRate) + 
+                               (siteVisits * siteVisitFee);
+    }
+
+    const clientDiscount = parseFloat(document.getElementById('clientDiscount').value) / 100 || 0;
+    const totalAfterDiscount = totalBeforeDiscount * (1 - clientDiscount);
+
+    document.getElementById('totalEstimate').innerText = `$${totalAfterDiscount.toFixed(2)}`;
+}
+
+function generatePDF() {
+    const quoteForm = document.getElementById('quoteForm');
+    const pdfContent = quoteForm.innerHTML;  // Simplified version; you might want to customize this
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>Quote PDF</title></head><body>');
+    newWindow.document.write(pdfContent);
+    newWindow.document.write('</body></html>');
+    newWindow.document.close();
+    newWindow.print();
+}
+
+// Google Places Autocomplete Initialization
+function initializeAutocomplete() {
+    const input = document.getElementById('projectLocation');
+    const autocomplete = new google.maps.places.Autocomplete(input);
+}
+
+google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
