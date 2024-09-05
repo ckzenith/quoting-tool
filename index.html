@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quoting Tool</title>
+    <title>Quoting Tool V2</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Structural Engineering Quoting Tool</h1>
+        <h1>Structural Engineering Quoting Tool V2</h1>
         
         <!-- Project Information -->
         <form id="quoteForm">
@@ -19,20 +19,37 @@
             <!-- Dynamic Scope of Work -->
             <div id="scopeContainer">
                 <h3>Scope of Work 1</h3>
-                <label for="scope1">Description:</label>
-                <input type="text" id="scope1" name="scope1" required>
+
+                <!-- New Scope of Work Dropdown Field -->
+                <label for="scopeWork1">Scope of Work:</label>
+                <select id="scopeWork1" name="scopeWork1" onchange="checkOtherScope(1)">
+                    <option value="anchorage design">Anchorage Design</option>
+                    <option value="pipe support design">Pipe Support Design</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <!-- Input for 'Other' option -->
+                <input type="text" id="otherScopeWork1" name="otherScopeWork1" placeholder="Enter other scope" style="display:none;">
+
+                <label for="description1">Description:</label>
+                <input type="text" id="description1" name="description1" required>
+
                 <label for="hoursPrincipal1">Hours of Principal Engineer:</label>
                 <input type="number" id="hoursPrincipal1" name="hoursPrincipal1" min="0" value="0" required>
+
                 <label for="hoursEngineering1">Hours of Engineering:</label>
                 <input type="number" id="hoursEngineering1" name="hoursEngineering1" min="0" value="0" required>
+
                 <label for="hoursDrafting1">Hours of Drafting:</label>
                 <input type="number" id="hoursDrafting1" name="hoursDrafting1" min="0" value="0" required>
+
                 <label for="siteVisits1">Site Visits Needed:</label>
                 <input type="number" id="siteVisits1" name="siteVisits1" min="0" value="0" required>
             </div>
 
-            <!-- Add More Scopes Button -->
+            <!-- Add & Remove Scope Buttons -->
             <button type="button" id="addScopeButton">Add Another Scope of Work</button>
+            <button type="button" id="removeScopeButton">Remove Last Scope of Work</button>
 
             <!-- Fee Rates -->
             <h2>Rates & Fees</h2>
@@ -60,6 +77,6 @@
         <button type="button" onclick="generatePDF()">Generate PDF</button>
     </div>
 
-    <script src="quote-tool.js"></script>
+    <script src="quote-tool-v2.js"></script>
 </body>
 </html>
