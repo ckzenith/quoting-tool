@@ -3,22 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quoting Tool V2</title>
+    <title>Zenith Engineers Quoting Tool</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAECWgUgZ0oKgr2OJoiJ03nWi0678EduCo&libraries=places"></script>
-    <script>
-        function initAutocomplete() {
-            const input = document.getElementById('projectLocation');
-            const autocomplete = new google.maps.places.Autocomplete(input);
-        }
-
-        // Ensure the initAutocomplete function is called when the page loads
-        document.addEventListener('DOMContentLoaded', initAutocomplete);
-    </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAECWgUgZ0oKgr2OJoiJ03nWi0678EduCo&libraries=places" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Structural Engineering Quoting Tool</h1>
+        <h1>Zenith Engineers Quoting Tool</h1>
+
 
         <!-- Project Information -->
         <form id="quoteForm">
@@ -30,32 +23,334 @@
 
             <!-- Dynamic Scope of Work -->
             <div id="scopeContainer">
-                <h3>Scope of Work 1</h3>
+                <div class="scope">
+                    <h3>Scope of Work 1</h3>
 
-                <!-- New Scope of Work Dropdown Field -->
-                <label for="scopeWork1">Scope of Work:</label>
-                <select id="scopeWork1" name="scopeWork1" onchange="checkOtherScope(1)">
+                    <label for="scopeWork1">Scope of Work:</label>
+                    <select id="scopeWork1" name="scopeWork1" onchange="checkOtherScope(1)">
+                        <option value="anchorage design">Anchorage Design</option>
+                        <option value="pipe support design">Pipe Support Design</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <input type="text" id="otherScopeWork1" name="otherScopeWork1" placeholder="Enter other scope" style="display:none;">
+
+                    <label for="description1">Description:</label>
+                    <input type="text" id="description1" name="description1" required>
+
+                    <label for="hoursPrincipal1">Hours of Principal Engineer:</label>
+                    <input type="number" id="hoursPrincipal1" name="hoursPrincipal1" min="0" value="0" required>
+
+                    <label for="hoursEngineering1">Hours of Engineering:</label>
+                    <input type="number" id="hoursEngineering1" name="hoursEngineering1" min="0" value="0" required>
+
+                    <label for="hoursDrafting1">Hours of Drafting:</label>
+                    <input type="number" id="hoursDrafting1" name="hoursDrafting1" min="0" value="0" required>
+
+                    <label for="siteVisits1">Site Visits Needed:</label>
+                    <input type="number" id="siteVisits1" name="siteVisits1" min="0" value="0" required>
+
+                    <!-- Subtotal for Scope of Work 1 -->
+                    <p id="subtotal1">Subtotal: $0.00</p>
+                </div>
+            </div>
+
+            <!-- Checkbox for Potential for Re-Work -->
+            <label for="potentialRework">Potential for Re-Work:</label>
+            <input type="checkbox" id="potentialRework" name="potentialRework">
+
+            <!-- Buttons to add/remove scope of work -->
+            <button type="button" id="addScopeButton">Add Scope of Work</button>
+            <button type="button" id="removeScopeButton" style="display:none;">Remove Last Scope of Work</button>
+
+            <!-- Total Estimate -->
+            <h2>Total Estimate</h2>
+            <p id="totalEstimate">$0.00</p>
+        </form>
+
+        <!-- Editable Rates -->
+        <h2>Current Rates</h2>
+        <label for="ratePrincipal">Principal Engineer Rate:</label>
+        <input type="number" id="ratePrincipal" name="ratePrincipal" value="150" min="0">
+        <br>
+        <label for="rateEngineering">Engineering Rate:</label>
+        <input type="number" id="rateEngineering" name="rateEngineering" value="100" min="0">
+        <br>
+        <label for="rateDrafting">Drafting Rate:</label>
+        <input type="number" id="rateDrafting" name="rateDrafting" value="80" min="0">
+        <br>
+        <label for="rateTravel">Travel Rate:</label>
+        <input type="number" id="rateTravel" name="rateTravel" value="50" min="0">
+
+        <!-- Generate PDF Button -->
+        <button type="button" id="generatePdfButton">Generate PDF</button>
+
+        <!-- Previous Work for the Client Table -->
+        <h2>Previous Work for the Client</h2>
+        <table border="1">
+            <tr>
+                <th>Project</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Outcome</th>
+            </tr>
+            <tr>
+                <td>Project 1</td>
+                <td>Description 1</td>
+                <td>Date 1</td>
+                <td>Outcome 1</td>
+            </tr>
+            <tr>
+                <td>Project 2</td>
+                <td>Description 2</td>
+                <td>Date 2</td>
+                <td>Outcome 2</td>
+            </tr>
+            <tr>
+                <td>Project 3</td>
+                <td>Description 3</td>
+                <td>Date 3</td>
+                <td>Outcome 3</td>
+            </tr>
+            <tr>
+                <td>Project 4</td>
+                <td>Description 4</td>
+                <td>Date 4</td>
+                <td>Outcome 4</td>
+            </tr>
+        </table>
+
+        <!-- Pricing for Similar Scopes of Work Table -->
+        <h2>Pricing for Similar Scopes of Work</h2>
+        <table border="1">
+            <tr>
+                <th>Scope</th>
+                <th>Hours</th>
+                <th>Rate</th>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <td>Scope 1</td>
+                <td>Hours 1</td>
+                <td>Rate 1</td>
+                <td>Total 1</td>
+            </tr>
+            <tr>
+                <td>Scope 2</td>
+                <td>Hours 2</td>
+                <td>Rate 2</td>
+                <td>Total 2</td>
+            </tr>
+            <tr>
+                <td>Scope 3</td>
+                <td>Hours 3</td>
+                <td>Rate 3</td>
+                <td>Total 3</td>
+            </tr>
+            <tr>
+                <td>Scope 4</td>
+                <td>Hours 4</td>
+                <td>Rate 4</td>
+                <td>Total 4</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function initAutocomplete() {
+            const input = document.getElementById('projectLocation');
+            if (input) {
+                const autocomplete = new google.maps.places.Autocomplete(input);
+                console.log('Autocomplete initialized');
+            } else {
+                console.error('Element with id "projectLocation" not found');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded and parsed');
+            initAutocomplete();
+        });
+
+        const rates = {
+            principal: 150,
+            engineering: 100,
+            drafting: 80,
+            travel: 50
+        };
+
+        function calculateTotalEstimate() {
+            let total = 0;
+            for (let i = 1; i <= scopeCount; i++) {
+                const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value) || 0;
+                const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value) || 0;
+                const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value) || 0;
+                const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
+
+                const subtotal = (hoursPrincipal * rates.principal) +
+                                 (hoursEngineering * rates.engineering) +
+                                 (hoursDrafting * rates.drafting) +
+                                 (siteVisits * rates.travel);
+
+                document.getElementById(`subtotal${i}`).innerText = `Subtotal: $${subtotal.toFixed(2)}`;
+                total += subtotal;
+            }
+            document.getElementById('totalEstimate').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function updateRates() {
+            rates.principal = parseFloat(document.getElementById('ratePrincipal').value) || rates.principal;
+            rates.engineering = parseFloat(document.getElementById('rateEngineering').value) || rates.engineering;
+            rates.drafting = parseFloat(document.getElementById('rateDrafting').value) || rates.drafting;
+            rates.travel = parseFloat(document.getElementById('rateTravel').value) || rates.travel;
+            calculateTotalEstimate();
+        }
+
+        document.addEventListener('input', calculateTotalEstimate);
+        document.addEventListener('input', updateRates);
+
+        let scopeCount = 1;
+
+        function addScope() {
+            scopeCount++;
+            const scopeContainer = document.getElementById('scopeContainer');
+            const newScope = document.createElement('div');
+            newScope.classList.add('scope');
+            newScope.innerHTML = `
+                <h3>Scope of Work ${scopeCount}</h3>
+
+                <label for="scopeWork${scopeCount}">Scope of Work:</label>
+                <select id="scopeWork${scopeCount}" name="scopeWork${scopeCount}" onchange="checkOtherScope(${scopeCount})">
                     <option value="anchorage design">Anchorage Design</option>
                     <option value="pipe support design">Pipe Support Design</option>
                     <option value="other">Other</option>
                 </select>
 
-                <!-- Input for 'Other' option -->
-                <input type="text" id="otherScopeWork1" name="otherScopeWork1" placeholder="Enter other scope" style="display:none;">
+                <input type="text" id="otherScopeWork${scopeCount}" name="otherScopeWork${scopeCount}" placeholder="Enter other scope" style="display:none;">
 
-                <label for="description1">Description:</label>
-                <input type="text" id="description1" name="description1" required>
+                <label for="description${scopeCount}">Description:</label>
+                <input type="text" id="description${scopeCount}" name="description${scopeCount}" required>
 
-                <label for="hoursPrincipal1">Hours of Principal Engineer:</label>
-                <input type="number" id="hoursPrincipal1" name="hoursPrincipal1" min="0" value="0" required>
+                <label for="hoursPrincipal${scopeCount}">Hours of Principal Engineer:</label>
+                <input type="number" id="hoursPrincipal${scopeCount}" name="hoursPrincipal${scopeCount}" min="0" value="0" required>
 
-                <label for="hoursEngineering1">Hours of Engineering:</label>
-                <input type="number" id="hoursEngineering1" name="hoursEngineering1" min="0" value="0" required>
+                <label for="hoursEngineering${scopeCount}">Hours of Engineering:</label>
+                <input type="number" id="hoursEngineering${scopeCount}" name="hoursEngineering${scopeCount}" min="0" value="0" required>
 
-                <label for="hoursDrafting1">Hours of Drafting:</label>
-                <input type="number" id="hoursDrafting1" name="hoursDrafting1" min="0" value="0" required>
-            </div>
-        </form>
-    </div>
+                <label for="hoursDrafting${scopeCount}">Hours of Drafting:</label>
+                <input type="number" id="hoursDrafting${scopeCount}" name="hoursDrafting${scopeCount}" min="0" value="0" required>
+
+                <label for="siteVisits${scopeCount}">Site Visits Needed:</label>
+                <input type="number" id="siteVisits${scopeCount}" name="siteVisits${scopeCount}" min="0" value="0" required>
+
+                <!-- Subtotal for Scope of Work ${scopeCount} -->
+                <p id="subtotal${scopeCount}">Subtotal: $0.00</p>
+            `;
+            scopeContainer.appendChild(newScope);
+
+          // Show the "Remove Last Scope of Work" button after adding a new scope
+const removeScopeButton = document.getElementById('removeScopeButton');
+if (removeScopeButton) {
+    removeScopeButton.style.display = 'block';
+} else {
+    console.error('Element with id "removeScopeButton" not found');
+}
+
+function removeScope() {
+    if (scopeCount > 1) {
+        const scopeContainer = document.getElementById('scopeContainer');
+        scopeContainer.removeChild(scopeContainer.lastChild);
+        scopeCount--;
+
+        // Hide the "Remove Last Scope of Work" button if there's only one scope left
+        const removeScopeButton = document.getElementById('removeScopeButton');
+        if (removeScopeButton) {
+            if (scopeCount === 1) {
+                removeScopeButton.style.display = 'none';
+            }
+        } else {
+            console.error('Element with id "removeScopeButton" not found');
+        }
+    }
+    calculateTotalEstimate();
+}}
+
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Define the header
+    function addHeader() {
+        doc.setFontSize(18);
+        doc.text('Zenith Engineers', 20, 10);
+        doc.setFontSize(12);
+        doc.text('Quoting Tool', 20, 16);
+        doc.setFontSize(10);
+        doc.text('Contact: conrad@zenithengineers.com | Phone: (415) 786-1700', 20, 22);
+        doc.line(20, 24, 190, 24); // Horizontal line
+    }
+
+    // Define the footer
+    function addFooter(pageNumber) {
+        doc.setFontSize(10);
+        doc.text(`Page ${pageNumber}`, 105, 290, null, null, 'center');
+        doc.line(20, 285, 190, 285); // Horizontal line
+        doc.setFontSize(8);
+        doc.text('Zenith Engineers © 2023', 20, 292);
+    }
+
+    // Add header and footer to the first page
+    addHeader();
+    addFooter(1);
+
+    doc.setFontSize(14);
+    doc.text('Project Information', 20, 30);
+    doc.text(`Project Address: ${document.getElementById('projectLocation').value}`, 20, 40);
+
+    for (let i = 1; i <= scopeCount; i++) {
+        if (i > 1) {
+            doc.addPage();
+            addHeader();
+            addFooter(doc.internal.getNumberOfPages());
+            doc.setFontSize(14); // Ensure font size is set for new page
+        }
+
+        let yOffset = 50;
+        doc.text(`Scope of Work ${i}`, 20, yOffset);
+        doc.text(`Scope: ${document.getElementById(`scopeWork${i}`).value}`, 20, yOffset + 10);
+        doc.text(`Description: ${document.getElementById(`description${i}`).value}`, 20, yOffset + 20);
+        doc.text(`Hours of Principal Engineer: ${document.getElementById(`hoursPrincipal${i}`).value}`, 20, yOffset + 30);
+        doc.text(`Hours of Engineering: ${document.getElementById(`hoursEngineering${i}`).value}`, 20, yOffset + 40);
+        doc.text(`Hours of Drafting: ${document.getElementById(`hoursDrafting${i}`).value}`, 20, yOffset + 50);
+        doc.text(`Site Visits Needed: ${document.getElementById(`siteVisits${i}`).value}`, 20, yOffset + 60);
+
+        const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value) || 0;
+        const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value) || 0;
+        const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value) || 0;
+        const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
+
+        const subtotal = (hoursPrincipal * rates.principal) +
+                         (hoursEngineering * rates.engineering) +
+                         (hoursDrafting * rates.drafting) +
+                         (siteVisits * rates.travel);
+
+        doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yOffset + 70);
+    }
+
+    // Add total estimate on the last page
+    doc.addPage();
+    addHeader();
+    addFooter(doc.internal.getNumberOfPages());
+    doc.setFontSize(14); // Ensure font size is set for new page
+    doc.text('Total Estimate', 20, 50);
+    doc.text(document.getElementById('totalEstimate').innerText, 20, 60);
+
+    // Save the PDF
+    doc.save('quote.pdf');
+}
+
+// Event listener for "Generate PDF" button
+document.getElementById('generatePdfButton').addEventListener('click', generatePDF);
+    </script>
 </body>
 </html>
