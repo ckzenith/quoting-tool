@@ -1,5 +1,36 @@
 let scopeCount = 1;
 
+const rates = {
+    principal: 150, // Example rate per hour for Principal Engineer
+    engineering: 100, // Example rate per hour for Engineering
+    drafting: 80, // Example rate per hour for Drafting
+    travel: 50 // Example rate per hour for Travel
+};
+
+function updateRates() {
+    rates.principal = parseFloat(document.getElementById('ratePrincipal').value) || 0;
+    rates.engineering = parseFloat(document.getElementById('rateEngineering').value) || 0;
+    rates.drafting = parseFloat(document.getElementById('rateDrafting').value) || 0;
+    rates.travel = parseFloat(document.getElementById('rateTravel').value) || 0;
+    calculateTotalEstimate();
+}
+
+function calculateTotalEstimate() {
+    let total = 0;
+    for (let i = 1; i <= scopeCount; i++) {
+        const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value) || 0;
+        const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value) || 0;
+        const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value) || 0;
+        const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
+
+        total += (hoursPrincipal * rates.principal) +
+                 (hoursEngineering * rates.engineering) +
+                 (hoursDrafting * rates.drafting) +
+                 (siteVisits * rates.travel);
+    }
+    document.getElementById('totalEstimate').innerText = `$${total.toFixed(2)}`;
+}
+
 function addScope() {
     scopeCount++;
     const scopeContainer = document.getElementById('scopeContainer');
@@ -30,11 +61,22 @@ function addScope() {
 
         <label for="siteVisits${scopeCount}">Site Visits Needed:</label>
         <input type="number" id="siteVisits${scopeCount}" name="siteVisits${scopeCount}" min="0" value="0" required>
+
+        <!-- Subtotal for Scope of Work ${scopeCount} -->
+        <p id="subtotal${scopeCount}">Subtotal: $0.00</p>
     `;
     scopeContainer.appendChild(newScope);
 
     // Show the "Remove Last Scope of Work" button after adding a new scope
-    document.getElementById('removeScopeButton').style.display = 'block';
+    const removeScopeButton = document.getElementById('removeScopeButton');
+    if (removeScopeButton) {
+        removeScopeButton.style.display = 'block';
+    } else {
+        console.error('Element with id "removeScopeButton" not found');
+    }
+
+    // Recalculate the total estimate
+    calculateTotalEstimate();
 }
 
 function removeScope() {
@@ -44,66 +86,135 @@ function removeScope() {
         scopeCount--;
 
         // Hide the "Remove Last Scope of Work" button if there's only one scope left
-        if (scopeCount === 1) {
-            document.getElementById('removeScopeButton').style.display = 'none';
+        const removeScopeButton = document.getElementById('removeScopeButton');
+        if (removeScopeButton) {
+            if (scopeCount === 1) {
+                removeScopeButton.style.display = 'none';
+            }
+        } else {
+            console.error('Element with id "removeScopeButton" not found');
         }
+
+        // Recalculate the total estimate
+        calculateTotalEstimate();
     }
 }
 
-document.getElementById('addScopeButton').addEventListener('click', addScope);
-document.getElementById('removeScopeButton').addEventListener('click', removeScope);
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-function checkOtherScope(scopeNum) {
-    const dropdown = document.getElementById(`scopeWork${scopeNum}`);
-    const otherScopeInput = document.getElementById(`otherScopeWork${scopeNum}`);
-    if (dropdown.value === 'other') {
-        otherScopeInput.style.display = 'block';
-    } else {
-        otherScopeInput.style.display = 'none';
+    // Define the header
+    function addHeader() {
+        doc.setFontSize(18);
+        doc.text('Zenith Engineers', 20, 10);
+        doc.setFontSize(12);
+        doc.text('Quoting Tool', 20, 16);
+        doc.setFontSize(10);
+        doc.text('Contact: conrad@zenithengineers.com | Phone: (415) 786-1700', 20, 22);
+        doc.line(20, 24, 190, 24); // Horizontal line
     }
-}
 
-function calculateTotal() {
-    const principalEngineerRate = parseFloat(document.getElementById('principalEngineerRate').value) || 0;
-    const engineeringRate = parseFloat(document.getElementById('engineeringRate').value) || 0;
-    const draftingRate = parseFloat(document.getElementById('draftingRate').value) || 0;
-    const siteVisitFee = parseFloat(document.getElementById('siteVisitFee').value) || 0;
-    const travelFee = parseFloat(document.getElementById('travelFee').value) || 0;
-    let totalBeforeDiscount = travelFee;
+    // Define the footer
+    function addFooter(pageNumber) {
+        doc.setFontSize(10);
+        doc.text(`Page ${pageNumber}`, 105, 290, null, null, 'center');
+        doc.line(20, 285, 190, 285); // Horizontal line
+        doc.setFontSize(8);
+        doc.text('Zenith Engineers © 2023', 20, 292);
+    }
+
+    // Add header and footer to the first page
+    addHeader();
+    addFooter(1);
+
+    doc.setFontSize(14);
+    doc.text('Project Information', 20, 30);
+    doc.text(`Project Address: ${document.getElementById('projectLocation').value}`, 20, 40);
 
     for (let i = 1; i <= scopeCount; i++) {
+        if (i > 1) {
+            doc.addPage();
+            addHeader();
+            addFooter(doc.internal.getNumberOfPages());
+            doc.setFontSize(14); // Ensure font size is set for new page
+        }
+
+        let yOffset = 50;
+        doc.text(`Scope of Work ${i}`, 20, yOffset);
+        doc.text(`Scope: ${document.getElementById(`scopeWork${i}`).value}`, 20, yOffset + 10);
+        doc.text(`Description: ${document.getElementById(`description${i}`).value}`, 20, yOffset + 20);
+        doc.text(`Hours of Principal Engineer: ${document.getElementById(`hoursPrincipal${i}`).value}`, 20, yOffset + 30);
+        doc.text(`Hours of Engineering: ${document.getElementById(`hoursEngineering${i}`).value}`, 20, yOffset + 40);
+        doc.text(`Hours of Drafting: ${document.getElementById(`hoursDrafting${i}`).value}`, 20, yOffset + 50);
+        doc.text(`Site Visits Needed: ${document.getElementById(`siteVisits${i}`).value}`, 20, yOffset + 60);
+
         const hoursPrincipal = parseFloat(document.getElementById(`hoursPrincipal${i}`).value) || 0;
         const hoursEngineering = parseFloat(document.getElementById(`hoursEngineering${i}`).value) || 0;
         const hoursDrafting = parseFloat(document.getElementById(`hoursDrafting${i}`).value) || 0;
         const siteVisits = parseFloat(document.getElementById(`siteVisits${i}`).value) || 0;
 
-        totalBeforeDiscount += (hoursPrincipal * principalEngineerRate) + 
-                               (hoursEngineering * engineeringRate) + 
-                               (hoursDrafting * draftingRate) + 
-                               (siteVisits * siteVisitFee);
+        const subtotal = (hoursPrincipal * rates.principal) +
+                         (hoursEngineering * rates.engineering) +
+                         (hoursDrafting * rates.drafting) +
+                         (siteVisits * rates.travel);
+
+        doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yOffset + 70);
     }
 
-    const clientDiscount = parseFloat(document.getElementById('clientDiscount').value) / 100 || 0;
-    const totalAfterDiscount = totalBeforeDiscount * (1 - clientDiscount);
+    // Add total estimate on the last page
+    doc.addPage();
+    addHeader();
+    addFooter(doc.internal.getNumberOfPages());
+    doc.setFontSize(14); // Ensure font size is set for new page
+    doc.text('Total Estimate', 20, 50);
+    doc.text(document.getElementById('totalEstimate').innerText, 20, 60);
 
-    document.getElementById('totalEstimate').innerText = `$${totalAfterDiscount.toFixed(2)}`;
+    // Save the PDF
+    doc.save('quote.pdf');
 }
 
-function generatePDF() {
-    const quoteForm = document.getElementById('quoteForm');
-    const pdfContent = quoteForm.innerHTML;  // Simplified version; you might want to customize this
-    const newWindow = window.open();
-    newWindow.document.write('<html><head><title>Quote PDF</title></head><body>');
-    newWindow.document.write(pdfContent);
-    newWindow.document.write('</body></html>');
-    newWindow.document.close();
-    newWindow.print();
-}
+// Ensure the DOM is fully loaded before adding event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const addScopeButton = document.getElementById('addScopeButton');
+    if (addScopeButton) {
+        addScopeButton.addEventListener('click', addScope);
+    } else {
+        console.error('Element with id "addScopeButton" not found');
+    }
 
-// Google Places Autocomplete Initialization
-function initializeAutocomplete() {
+    const removeScopeButton = document.getElementById('removeScopeButton');
+    if (removeScopeButton) {
+        removeScopeButton.addEventListener('click', removeScope);
+    } else {
+        console.error('Element with id "removeScopeButton" not found');
+    }
+
+    // New event listeners for rate fields
+    document.getElementById('ratePrincipal').addEventListener('input', updateRates);
+    document.getElementById('rateEngineering').addEventListener('input', updateRates);
+    document.getElementById('rateDrafting').addEventListener('input', updateRates);
+    document.getElementById('rateTravel').addEventListener('input', updateRates);
+
+    // Ensure rates are updated and total estimate is calculated on page load
+    updateRates();
+
+    // Event listener for "Generate PDF" button
+    const generatePdfButton = document.getElementById('generatePdfButton');
+    if (generatePdfButton) {
+        generatePdfButton.addEventListener('click', generatePDF);
+    } else {
+        console.error('Element with id "generatePdfButton" not found');
+    }
+   
+    // Initialize Google Maps Places Autocomplete
+function initAutocomplete() {
     const input = document.getElementById('projectLocation');
-    const autocomplete = new google.maps.places.Autocomplete(input);
+    if (input) {
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        console.log('Autocomplete initialized');
+    } else {
+        console.error('Element with id "projectLocation" not found');
+    }
 }
-
-google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
+});
