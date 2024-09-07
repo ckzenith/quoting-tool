@@ -1,12 +1,49 @@
+/* General Styles */
+body {
+    font-family: 'Times New Roman', 'Times', serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Header Styles */
 h1, h2, h3 {
     text-align: center;
     color: #333;
+    margin-bottom: 20px;
 }
 
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 25px;
+}
+
+h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+/* Form Styles */
 label {
     display: block;
     margin-top: 10px;
     margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
 }
 
 input[type="text"], input[type="number"], select {
@@ -15,8 +52,17 @@ input[type="text"], input[type="number"], select {
     margin-bottom: 20px;
     border-radius: 5px;
     border: 1px solid #ddd;
+    font-size: 1em;
+    box-sizing: border-box;
 }
 
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button Styles */
 button {
     width: 100%;
     padding: 15px;
@@ -25,44 +71,67 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
+/* Total Estimate Styles */
 #totalEstimate {
     font-size: 1.5em;
     color: green;
     text-align: center;
     margin-top: 20px;
+    font-weight: bold;
 }
 
-/* Style the autocomplete dropdown */
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Autocomplete Styles */
 .pac-container {
     background-color: #fff;
     border: 1px solid #ccc;
     z-index: 10000;
 }
 
-/* Style the individual autocomplete items */
 .pac-item {
     padding: 10px;
     cursor: pointer;
 }
 
-/* Style the highlighted autocomplete item */
 .pac-item:hover, .pac-item-selected {
     background-color: #f0f0f0;
 }
 
-/* Style the primary text in the autocomplete item */
 .pac-item .pac-item-query {
     font-weight: bold;
     color: #333;
 }
 
-/* Style the secondary text in the autocomplete item */
 .pac-item .pac-item-query + span {
     color: #999;
 }
