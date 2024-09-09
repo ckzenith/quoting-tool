@@ -16,25 +16,45 @@ body {
 }
 
 /* Header Styles */
-h1, h2, h3 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-h1 {
-    font-size: 2.5em;
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 30px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
 }
 
-h2 {
+.header #logo {
+    margin-bottom: 0;
+}
+
+.header-text {
+    text-align: right;
+}
+
+.header h1 {
     font-size: 2em;
-    margin-bottom: 25px;
+    margin: 0;
+    color: #333;
 }
 
-h3 {
-    font-size: 1.5em;
+.header p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Divider Styles */
+.divider {
+    border-bottom: 2px solid #ddd;
     margin-bottom: 20px;
+}
+
+/* Form Container Styles */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* Form Styles */
@@ -46,7 +66,7 @@ label {
     color: #555;
 }
 
-input[type="text"], input[type="number"], select {
+input[type="text"], input[type="number"], select, textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -56,7 +76,7 @@ input[type="text"], input[type="number"], select {
     box-sizing: border-box;
 }
 
-input[type="text"]:focus, input[type="number"]:focus, select:focus {
+input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
     border-color: #007bff;
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -64,9 +84,9 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 
 /* Button Styles */
 button {
-    width: 100%;
+    width: 40%;
     padding: 15px;
-    background-color: #007bff;
+    background-color: #010101;
     color: white;
     border: none;
     border-radius: 5px;
@@ -76,14 +96,14 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: 010101;
 }
 
 /* Total Estimate Styles */
 #totalEstimate {
     font-size: 1.5em;
     color: green;
-    text-align: center;
+    text-align: left;
     margin-top: 20px;
     font-weight: bold;
 }
@@ -134,4 +154,57 @@ tr:nth-child(even) {
 
 .pac-item .pac-item-query + span {
     color: #999;
+}
+
+/* Form Row and Column Styles */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.form-column {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-column:last-child {
+    margin-right: 0;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
