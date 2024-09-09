@@ -5,60 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith Engineers Quoting Tool</title>
     <link rel="stylesheet" href="styles.css">
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAECWgUgZ0oKgr2OJoiJ03nWi0678EduCo&libraries=places" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAECWgUgZ0oKgr2OJoiJ03nWi0678EduCo&libraries=places&callback=init" async defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Zenith Engineers Quoting Tool</h1>
-
+         <!-- Header -->
+        <header class="header">
+            <div id="logo">
+                <img src="logo.jpg" alt="Zenith Engineers Logo" style="width: 100px; height: auto;">
+            </div>
+            <div class="header-text">
+                <h1>Zenith Engineers Project Quote</h1>
+                <p>Contact: conrad@zenithengineers.com | Phone: (415) 786-1700</p>
+            </div>
+        </header>
 
         <!-- Project Information -->
         <form id="quoteForm">
             <h2>Project Information</h2>
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="dealName">Deal Name:</label>
+                    <input type="text" id="dealName" name="dealName" required>
 
-            <!-- Project Address with Autocomplete -->
-            <label for="projectLocation">Project Address:</label>
-            <input type="text" id="projectLocation" name="projectLocation" placeholder="Enter project address" required>
-
-            <!-- Dynamic Scope of Work -->
-            <div id="scopeContainer">
-                <div class="scope">
-                    <h3>Scope of Work 1</h3>
-
-                    <label for="scopeWork1">Scope of Work:</label>
-                    <select id="scopeWork1" name="scopeWork1" onchange="checkOtherScope(1)">
-                        <option value="anchorage design">Anchorage Design</option>
-                        <option value="pipe support design">Pipe Support Design</option>
-                        <option value="other">Other</option>
-                    </select>
-
-                    <input type="text" id="otherScopeWork1" name="otherScopeWork1" placeholder="Enter other scope" style="display:none;">
-
-                    <label for="description1">Description:</label>
-                    <input type="text" id="description1" name="description1" required>
-
-                    <label for="hoursPrincipal1">Hours of Principal Engineer:</label>
-                    <input type="number" id="hoursPrincipal1" name="hoursPrincipal1" min="0" value="0" required>
-
-                    <label for="hoursEngineering1">Hours of Engineering:</label>
-                    <input type="number" id="hoursEngineering1" name="hoursEngineering1" min="0" value="0" required>
-
-                    <label for="hoursDrafting1">Hours of Drafting:</label>
-                    <input type="number" id="hoursDrafting1" name="hoursDrafting1" min="0" value="0" required>
-
-                    <label for="siteVisits1">Site Visits Needed:</label>
-                    <input type="number" id="siteVisits1" name="siteVisits1" min="0" value="0" required>
-
-                    <!-- Subtotal for Scope of Work 1 -->
-                    <p id="subtotal1">Subtotal: $0.00</p>
+                </div>
+                <div class="form-column">
+                    <label for="projectLocation">Project Address:</label>
+                    <input type="text" id="projectLocation" name="projectLocation" placeholder="Enter project address" required>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="clientName">Client Name:</label>
+                    <input type="text" id="clientName" name="clientName" required>
+                </div>
+                <div class="form-column">
+                    <label for="clientSpecificPricing">Client Specific Pricing:</label>
+                    <input type="text" id="clientSpecificPricing" name="clientSpecificPricing" placeholder="Enter client specific pricing">
+                </div>
+            </div>
+        </form>
 
-            <!-- Checkbox for Potential for Re-Work -->
-            <label for="potentialRework">Potential for Re-Work:</label>
-            <input type="checkbox" id="potentialRework" name="potentialRework">
+         <!-- Dynamic Quote Information -->
+         <div id="scopeContainer">
+            <div class="scope">
+                <h3>Quote Information</h3>
+                <div class="form-row">
+                    <div class="form-column">
+                        <label for="scopeWork1">Scope of Work:</label>
+                        <select id="scopeWork1" name="scopeWork1" onchange="checkOtherScope(1)">
+                            <option value="anchorage design">Anchorage Design</option>
+                            <option value="pipe support design">Pipe Support Design</option>
+                            <option value="other">Other</option>
+                        </select>
+
+                        <input type="text" id="otherScopeWork1" name="otherScopeWork1" placeholder="Enter other scope" style="display:none;">
+
+                        <label for="quotePreparedBy">Quote Prepared By:</label>
+                        <input type="text" id="quotePreparedBy" name="quotePreparedBy" required>
+                        
+                        <label for="description1">Description:</label>
+                        <input type="text" id="description1" name="description1" required>
+                    </div>
+                    <div class="form-column">
+                        <label for="hoursPrincipal1">Hours of Principal Engineer:</label>
+                        <input type="number" id="hoursPrincipal1" name="hoursPrincipal1" min="0" value="0" required>
+
+                        <label for="hoursEngineering1">Hours of Engineering:</label>
+                        <input type="number" id="hoursEngineering1" name="hoursEngineering1" min="0" value="0" required>
+
+                        <label for="hoursDrafting1">Hours of Drafting:</label>
+                        <input type="number" id="hoursDrafting1" name="hoursDrafting1" min="0" value="0" required>
+
+                        <label for="siteVisits1">Site Visits Needed:</label>
+                        <input type="number" id="siteVisits1" name="siteVisits1" min="0" value="0" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                    <!-- Subtotal for Scope of Work 1 -->
+                    <h3> Subtotal</h3>
+                    <p id="subtotal1"> $0.00</p>
 
             <!-- Buttons to add/remove scope of work -->
             <button type="button" id="addScopeButton">Add Scope of Work</button>
@@ -67,10 +98,103 @@
             <!-- Total Estimate -->
             <h2>Total Estimate</h2>
             <p id="totalEstimate">$0.00</p>
-        </form>
 
-        <!-- Editable Rates -->
-        <h2>Current Rates</h2>
+        <!-- Generate PDF Button -->
+    <label for ="fileInput">Upload Appendix PDF</label>
+        <input type="file" id="fileInput" accept="image/*,.pdf">
+    <br>
+    <br>
+        <button type="button" id="generatePdfButton">Generate PDF</button>
+
+       <!-- Previous Quotes for the Client -->
+<h2>Previous Quotes for the Client</h2>
+<table id="previousWorkTable" border="1">
+    <thead>
+        <tr>
+            <th>Deal Name</th>
+            <th>Scope of Work</th>
+            <th>Stage</th>
+            <th>Quote Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>240441 - Anchorage Design - Mccarthy</td>
+            <td>Anchorage Design</td>
+            <td>Closed Won</td>
+            <td>$2,400</td>
+        </tr>
+        <tr>
+            <td>240442 - Anchorage Design - Mccarthy</td>
+            <td>Anchorage Design</td>
+            <td>Proposal Sent</td>
+            <td>$2,800</td>
+        </tr>
+        <tr>
+            <td>240443 - Anchorage Design - Mccarthy</td>
+            <td>Anchorage Design</td>
+            <td>Closed Lost</td>
+            <td>$3,200</td>
+        </tr>
+    </tbody>
+</table>
+
+   <!-- Recent Projects with Similar Scopes of Work Table -->
+   <h2>Recent Projects with Similar Scopes of Work</h2>
+   <table id= "recentProjectsTable" border="1">
+       <tr>
+           <th>Scope of Work</th>
+           <th>Deal Name</th>
+           <th>Proposal Signed Date</th>
+           <th>Amount</th>
+       </tr>
+       <tr>
+           <td>Anchorage Design</td>
+           <td>240112 - Anchorage Design - Swinerton</td>
+           <td>09/01/24</td>
+           <td>$2,000</td>
+       </tr>
+       <tr>
+           <td>Anchorage Design</td>
+           <td>240113 - Anchorage Design - Fil-Trek</td>
+           <td>09/05/24</td>
+           <td>$3,400</td>
+       </tr>
+       <tr>
+           <td>Anchorage Design</td>
+           <td>240114 - Anchorage Design - Turner</td>
+           <td>09/10/24</td>
+           <td>$2,200</td>
+       </tr>
+       <tr>
+           <td>Anchorage Design</td>
+           <td>240115 - Anchorage Design - Mccarthy</td>
+           <td>09/11/24</td>
+           <td>$2,600</td>
+       </tr>
+   </table>
+
+ <!-- Editable Rates -->
+ <h2>Current Rates</h2>
+ <label for="ratePrincipal">Principal Engineer Rate:</label>
+ <input type="number" id="ratePrincipal" name="ratePrincipal" value="150" min="0">
+ <br>
+ <label for="rateEngineering">Engineering Rate:</label>
+ <input type="number" id="rateEngineering" name="rateEngineering" value="100" min="0">
+ <br>
+ <label for="rateDrafting">Drafting Rate:</label>
+ <input type="number" id="rateDrafting" name="rateDrafting" value="80" min="0">
+ <br>
+ <label for="rateTravel">Travel Rate:</label>
+ <input type="number" id="rateTravel" name="rateTravel" value="50" min="0">
+</div>
+
+
+ <!-- Hourly Rates Modal -->
+ <div id="ratesModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRatesModal()">&times;</span>
+        <h2>Edit Hourly Rates</h2>
         <label for="ratePrincipal">Principal Engineer Rate:</label>
         <input type="number" id="ratePrincipal" name="ratePrincipal" value="150" min="0">
         <br>
@@ -82,77 +206,10 @@
         <br>
         <label for="rateTravel">Travel Rate:</label>
         <input type="number" id="rateTravel" name="rateTravel" value="50" min="0">
-
-        <!-- Generate PDF Button -->
-        <button type="button" id="generatePdfButton">Generate PDF</button>
-
-       <!-- Previous Work for the Client -->
-<h2>Previous Work for the Client</h2>
-<table id="previousWorkTable" border="1">
-    <thead>
-        <tr>
-            <th>Deal Name</th>
-            <th>Location</th>
-            <th>Scope of Work</th>
-            <th>Completion Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Project Alpha</td>
-            <td>123 Main St, Anytown, USA</td>
-            <td>Anchorage Design</td>
-            <td>2022-01-15</td>
-        </tr>
-        <tr>
-            <td>Project Beta</td>
-            <td>456 Elm St, Othertown, USA</td>
-            <td>Pipe Support Design</td>
-            <td>2022-06-30</td>
-        </tr>
-        <tr>
-            <td>Project Gamma</td>
-            <td>789 Oak St, Sometown, USA</td>
-            <td>Other</td>
-            <td>2023-03-10</td>
-        </tr>
-    </tbody>
-</table>
-        <!-- Recent Projects with Similar Scopes of Work Table -->
-        <h2>Recent Projects with Similar Scopes of Work</h2>
-        <table id= "recentProjectsTable" border="1">
-            <tr>
-                <th>Scope</th>
-                <th>Hours</th>
-                <th>Rate</th>
-                <th>Total</th>
-            </tr>
-            <tr>
-                <td>Anchorage Design</td>
-                <td>120</td>
-                <td>$100/hr</td>
-                <td>$12,000</td>
-            </tr>
-            <tr>
-                <td>Pipe Support Design</td>
-                <td>150</td>
-                <td>$110/hr</td>
-                <td>$16,500</td>
-            </tr>
-            <tr>
-                <td>Structural Analysis</td>
-                <td>200</td>
-                <td>$120/hr</td>
-                <td>$24,000</td>
-            </tr>
-            <tr>
-                <td>Other</td>
-                <td>80</td>
-                <td>$90/hr</td>
-                <td>$7,200</td>
-            </tr>
-        </table>
+        <br>
+        <button type="button" onclick="saveRates()">Save Rates</button>
     </div>
+</div>
 
     <script>
         function initAutocomplete() {
